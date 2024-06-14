@@ -29,7 +29,7 @@ import { KeyValuePipe } from '@angular/common';
     </section>
   `,
 })
-export class FormModal {
+export class FormModalComponent {
   formGroup = input.required<FormGroup>();
   title = input.required<string>();
   save = output();

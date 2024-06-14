@@ -4,8 +4,13 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () =>
-      import('./pages/home/home-page.component').then(
-        (m) => m.HomePageComponent
+      import('./pages/home-page.component').then((m) => m.HomePageComponent),
+  },
+  {
+    path: 'checklist/:id',
+    loadComponent: () =>
+      import('./pages/checklist-page.component').then(
+        (m) => m.ChecklistPageComponent
       ),
   },
   {
