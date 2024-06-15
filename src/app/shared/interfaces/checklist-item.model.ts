@@ -10,9 +10,17 @@ export type AddChecklistItem = {
   checklistId: ChecklistItem['checklistId'];
 };
 
-export type EditCheckListItem = {
+export type ToggleChecklistItem = {
+  id: ChecklistItem['id'];
+};
+
+export type ResetChecklistItems = {
+  checklistId: ChecklistItem['checklistId'];
+};
+
+export type EditChecklistItem = {
   id: ChecklistItem['id'];
   data: AddChecklistItem['item'];
 };
 
-export type RemoveChecklistItem = ChecklistItem['id'];
+export type DeleteChecklistItem = { id: ChecklistItem['id'] };

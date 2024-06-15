@@ -12,22 +12,30 @@ import { KeyValuePipe } from '@angular/common';
       <button (click)="close.emit()">close</button>
     </header>
 
-    <section>
-      <form [formGroup]="formGroup()" (ngSubmit)="save.emit(); close.emit()">
-        @for (control of formGroup().controls | keyvalue; track control.key){
-        <div>
-          <label [for]="control.key">{{ control.key }}</label>
-          <input
-            [id]="control.key"
-            type="text"
-            [formControlName]="control.key"
-          />
-        </div>
-        }
-        <button type="submit">Save</button>
-      </form>
-    </section>
+    <form [formGroup]="formGroup()" (ngSubmit)="save.emit(); close.emit()">
+      @for (control of formGroup().controls | keyvalue; track control.key){
+      <div>
+        <label [for]="control.key">{{ control.key }}</label>
+        <input [id]="control.key" type="text" [formControlName]="control.key" />
+      </div>
+      }
+      <button type="submit">Save</button>
+    </form>
   `,
+  styles: [
+    `
+      form {
+        padding: 2rem;
+        color: var(--color-light);
+        label {
+          margin-right: 1rem;
+        }
+        button {
+          margin-top: 1rem;
+        }
+      }
+    `,
+  ],
 })
 export class FormModalComponent {
   formGroup = input.required<FormGroup>();

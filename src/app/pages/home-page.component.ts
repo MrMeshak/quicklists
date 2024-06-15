@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { ModalComponent } from '../components/util/modal.component';
 import { Checklist } from '../shared/interfaces/checklist.model';
 import { FormBuilder } from '@angular/forms';
@@ -16,7 +16,11 @@ import { CheckListListComponent } from '../components/checklist/checklist-list.c
       <button (click)="checklistBeingEdited.set({})">Add Checklist</button>
     </header>
     <section>
-      <app-checklist-list [checklists]="checklistService.checklists()" />
+      <app-checklist-list
+        [checklists]="checklistService.checklists()"
+        (delete)="checklistService.delete$.next($event)"
+        (edit)="checklistBeingEdited.set($event)"
+      />
     </section>
     <app-modal [isOpen]="!!checklistBeingEdited()">
       <ng-template>
@@ -28,7 +32,16 @@ import { CheckListListComponent } from '../components/checklist/checklist-list.c
           "
           [formGroup]="checklistForm"
           (close)="checklistBeingEdited.set(null)"
-          (save)="checklistService.add$.next(checklistForm.getRawValue())"
+          (save)="
+            checklistBeingEdited()?.id
+              ? {
+                  id: checklistService.edit$.next({
+                    id: checklistBeingEdited()!.id!,
+                    data: checklistForm.getRawValue()
+                  })
+                }
+              : checklistService.add$.next(checklistForm.getRawValue())
+          "
         />
       </ng-template>
     </app-modal>
@@ -42,4 +55,18 @@ export class HomePageComponent {
   checklistForm = this.formBuilder.nonNullable.group({
     title: [''],
   });
+
+  constructor() {
+    effect(() => {
+      const checklist = this.checklistBeingEdited();
+
+      if (!checklist) {
+        this.checklistForm.reset();
+      } else {
+        this.checklistForm.patchValue({
+          title: checklist.title,
+        });
+      }
+    });
+  }
 }
